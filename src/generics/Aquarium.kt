@@ -24,12 +24,39 @@ class LakeWater:WaterSupply(true){
 //earlier \/
 //class Aquarium<T>(val waterSupply: T) // => class Aquarium<T: Any?>(val waterSupply: T)
 
-//now \/
-class Aquarium<T: WaterSupply>(val waterSupply: T){
-    fun addWater(){
-        check(!waterSupply.needsProcessing){"water supply needs processing first"}
-        println("adding water from $waterSupply")
+//now check()\/
+//class Aquarium<T: WaterSupply>(val waterSupply: T){
+//    fun addWater(){
+//        check(!waterSupply.needsProcessing){"water supply needs processing first"}
+//        println("adding water from $waterSupply")
+//    }
+//}
+
+//for IN OUT TYPES
+class Aquarium<out T: WaterSupply>(val waterSupply: T){ // out added later
+    fun addWater(cleaner: Cleaner<T>){
+        if(waterSupply.needsProcessing){
+            cleaner.clean((waterSupply))
+        }
+        println("water added")
     }
+}
+
+
+
+
+// for out - inout types
+fun addItemTo(aquarium: Aquarium<WaterSupply>) = println("item added")
+
+
+
+//for in - inout types
+interface Cleaner<in T: WaterSupply>{
+    fun clean(waterSupply: T)
+}
+
+class TapWaterCleaner:Cleaner<TapWater>{
+    override fun clean(waterSupply: TapWater) = waterSupply.addChemicalCleaners()
 }
 
 
@@ -52,14 +79,29 @@ fun genericsExample(){
     //Why can you pass null when creating an Aquarium? This is possible because by default, T stands for the nullable Any? type, the type at the top of the type hierarchy.
 
 
-    //check()
-    val aquarium4 = Aquarium(LakeWater())
-    //aquarium4.addWater() // will throw an exception warning to process water
-    aquarium4.waterSupply.filter() //after filtering
-    aquarium4.addWater()
+
+    ////will work for now check()
+//    //check()
+//    val aquarium4 = Aquarium(LakeWater())
+//    //aquarium4.addWater() // will throw an exception warning to process water
+//    aquarium4.waterSupply.filter() //after filtering
+//    aquarium4.addWater()
+
+
+    val aquarium5 = Aquarium(TapWater()) //out - inout types
+    addItemTo(aquarium5)
+
+    val cleaner = TapWaterCleaner()
+    val aquarium6 = Aquarium(TapWater())
+    aquarium6.addWater(cleaner)
+
 }
+
+
+
 
 
 fun main(){
     genericsExample()
 }
+
