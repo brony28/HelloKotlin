@@ -40,6 +40,11 @@ class Aquarium<out T: WaterSupply>(val waterSupply: T){ // out added later
         }
         println("water added")
     }
+
+
+    //generic functions for method
+    inline fun < reified R: WaterSupply> hasWaterSupplyOfType() = waterSupply is R
+
 }
 
 
@@ -58,6 +63,16 @@ interface Cleaner<in T: WaterSupply>{
 class TapWaterCleaner:Cleaner<TapWater>{
     override fun clean(waterSupply: TapWater) = waterSupply.addChemicalCleaners()
 }
+
+
+fun <T:WaterSupply> isWaterClean(aquarium: Aquarium<T>){
+    println("aquarium water is clean: ${!aquarium.waterSupply.needsProcessing}")
+}
+
+
+
+//extension function(generic methods)
+inline fun <reified T:WaterSupply> WaterSupply.isOfType() = this is T
 
 
 fun genericsExample(){
@@ -95,6 +110,16 @@ fun genericsExample(){
     val aquarium6 = Aquarium(TapWater())
     aquarium6.addWater(cleaner)
 
+    val aquarium7 = Aquarium(TapWater())
+    //isWaterClean<TapWater>(aquarium7)
+    ///Because of type inference from the argument aquarium, the type isn't needed, so remove it.
+    isWaterClean(aquarium7)
+
+    val aquarium8 = Aquarium(TapWater())
+    println(aquarium8.hasWaterSupplyOfType<TapWater>())
+
+    val aquarium9 = Aquarium(TapWater())
+    println(aquarium9.waterSupply.isOfType<TapWater>())
 }
 
 
