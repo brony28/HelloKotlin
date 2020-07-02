@@ -54,7 +54,6 @@ fun runExample2() {
     JavaRun.runNow {
         println("Last parameter is a lambda as a Runnable")
     }
-
 }
 
 
