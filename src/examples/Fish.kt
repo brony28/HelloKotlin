@@ -38,8 +38,30 @@ fun fishExamples2(){
 }
 
 
+fun runExample(){
+    val runnable = object:Runnable{
+        override fun run() {
+            println("I'm a Runnable")
+        }
+    }
+    JavaRun.runNow(runnable)
+}
+
+fun runExample2() {
+//    JavaRun.runNow({
+//        println("Passing a lambda as a Runnable")
+//    })//You can make this even more concise using the last parameter call syntax, and get rid of the parentheses.
+    JavaRun.runNow {
+        println("Last parameter is a lambda as a Runnable")
+    }
+
+}
+
+
 
 fun main(){
     fishExamples()
     fishExamples2()
+    runExample()
+    runExample2()
 }
